@@ -1,42 +1,28 @@
 # anna-data
 🌱 Anna-Data
 
-Empowering farmers with fair crop prices and access to agricultural equipment.
+Anna-Data is a farmer-first digital platform that connects farmers and buyers/distributors to solve two major challenges:
+- Fair pricing for crops
+- Access to farming equipment
 
-Overview
+🚜 Problem Statement
+Farmers often face:
+- Lack of transparent & fair pricing for their produce.
+- Limited access to affordable farming equipment.
+- Anna-Data bridges this gap with a two-sided marketplace.
 
-Anna-Data is a two-sided platform designed for farmers and buyers/distributors.
-It addresses two primary challenges in Indian agriculture:
+✨ Core Features
 
-Lack of transparent crop pricing.
+👨‍🌾 Farmer Side
+- Sell Crops → List crops with quantity, price, and location.
+- Search Equipment → Find tractors, machines, fertilizers via integrated search.
+- Dashboard → Earnings, crops listed, profit, and equipment rental history.
+- Weather Widget → 2-line forecast via OpenWeather API.
+- Government Schemes → Static info cards with available schemes.
+- Verified Badge (Future) → Farmers verified via Aadhaar for credibility.
 
-Limited access to affordable farming equipment.
-
-Built using React, TailwindCSS, and Firebase, the platform provides a clean, minimal, and mobile-first experience.
-
-Features
-Farmer
-
-List crops with quantity, price, and location (Google Maps API for autofill).
-
-Search and rent equipment (tractors, machines, fertilizers, etc.).
-
-Dashboard with earnings, items listed, and rental history.
-
-Weather forecast (OpenWeather API).
-
-Access to government schemes (static info cards).
-
-“Verified” badge for Aadhaar-verified farmers.
-
-Buyer / Distributor
-
-Browse crops with transparent mandi price comparison (static JSON).
-
-List equipment available for farmers to rent.
-
-Contact farmers directly (messaging).
-
-Ability to mark listed crops as “Out of Stock.”
-
-Buy/sell/list history for accountability.
+🛒 Buyer / Distributor Side
+- Marketplace → Browse crops with mandi price comparison (static JSON).
+- List Equipment → Buyers can rent out equipment for farmers.
+- Contact Farmers → Send direct messages to farmers.
+- Mark Crops Out of Stock → Farmers can update availability dynamically.
