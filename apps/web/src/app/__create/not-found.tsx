@@ -1,9 +1,14 @@
 import fg from 'fast-glob';
-import type { Route } from './+types/not-found';
 import { useNavigate } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
 
-export async function loader({ params }: Route.LoaderArgs) {
+// FIX: Removed the failing import for './+types/not-found'
+// and added a simple interface to replace it.
+interface LoaderArgs {
+  params: Record<string, string>;
+}
+
+export async function loader({ params }: LoaderArgs) { // <-- FIX: Used the new interface
   const matches = await fg('src/**/page.{js,jsx,ts,tsx}');
   return {
     path: `/${params['*']}`,
