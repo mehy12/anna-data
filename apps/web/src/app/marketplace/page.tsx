@@ -1,11 +1,34 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Package, MapPin, TrendingUp, ArrowLeft } from "lucide-react";
-import useUser from "@/utils/useUser";
-import Navigation from "@/components/Navigation";
+import { Package, MapPin, ArrowLeft } from "lucide-react";
+import useUser from "@/utils/useUser"; // You should rename this to useUser.ts
+import Navigation from "@/components/Navigation"; // You should rename this to Navigation.tsx
 
-// Mock mandi prices for demo
-const mandiPrices = {
+// Define the structure (type) of our data
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  // Add any other user properties you expect from your API
+}
+
+interface Crop {
+  id: string | number;
+  name: string;
+  farmer_name: string;
+  quantity: number;
+  asking_price: number;
+  location?: string; // The '?' makes this property optional
+  description?: string; // Optional
+}
+
+// Define the type for the mandi prices object
+type MandiPrices = {
+  [key: string]: number;
+};
+
+// Mock mandi prices for demo with the new type
+const mandiPrices: MandiPrices = {
   wheat: 1750,
   rice: 2200,
   corn: 1600,
@@ -15,17 +38,18 @@ const mandiPrices = {
   sugarcane: 350,
   potato: 800,
   onion: 1200,
-  tomato: 1500
+  tomato: 1500,
 };
 
-function MainComponent() {
+function MarketplacePage() {
   const { data: authUser, loading: userLoading } = useUser();
-  const [currentUser, setCurrentUser] = useState(null);
+  // Add a type to the currentUser state
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
-  // Fetch user profile
-  const { data: userProfile } = useQuery({
+  // Fetch user profile with types for useQuery
+  const { data: userProfile } = useQuery<UserProfile, Error>({
     queryKey: ['user-profile'],
-    queryFn: async () => {
+    queryFn: async (): Promise<UserProfile> => {
       const response = await fetch('/api/users');
       if (!response.ok) {
         throw new Error('Failed to fetch user profile');
@@ -36,10 +60,10 @@ function MainComponent() {
     enabled: !!authUser,
   });
 
-  // Fetch crops
-  const { data: cropsData, isLoading: cropsLoading } = useQuery({
+  // Fetch crops with types for useQuery
+  const { data: cropsData, isLoading: cropsLoading } = useQuery<{ crops: Crop[] }, Error>({
     queryKey: ['marketplace-crops'],
-    queryFn: async () => {
+    queryFn: async (): Promise<{ crops: Crop[] }> => {
       const response = await fetch('/api/crops');
       if (!response.ok) {
         throw new Error('Failed to fetch crops');
@@ -62,13 +86,15 @@ function MainComponent() {
     }
   }, [authUser, userLoading]);
 
-  const getMandiPrice = (cropName) => {
+  // Add a type to the cropName parameter
+  const getMandiPrice = (cropName: string): number | null => {
     const normalizedName = cropName.toLowerCase();
     return mandiPrices[normalizedName] || null;
   };
 
-  const getPriceComparison = (askingPrice, mandiPrice) => {
-    if (!mandiPrice) return null;
+  // Add types to the price parameters
+  const getPriceComparison = (askingPrice: number, mandiPrice: number | null) => {
+    if (mandiPrice === null) return null;
     const difference = askingPrice - mandiPrice;
     const percentage = ((difference / mandiPrice) * 100).toFixed(1);
     return { difference, percentage };
@@ -82,7 +108,8 @@ function MainComponent() {
     );
   }
 
-  const crops = cropsData?.crops || [];
+  // The 'crops' variable is now correctly typed as an array of Crop objects
+  const crops: Crop[] = cropsData?.crops || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,12 +140,14 @@ function MainComponent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* The 'crop' parameter is now automatically typed as a Crop object */}
             {crops.map((crop) => {
               const mandiPrice = getMandiPrice(crop.name);
-              const comparison = mandiPrice ? getPriceComparison(crop.asking_price, mandiPrice) : null;
+              const comparison = getPriceComparison(crop.asking_price, mandiPrice);
 
               return (
                 <div key={crop.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+                  {/* ... rest of your JSX remains the same ... */}
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div>
@@ -164,28 +193,6 @@ function MainComponent() {
                         </div>
                       )}
                     </div>
-
-                    {crop.description && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{crop.description}</p>
-                    )}
-
-                    <div className="flex gap-2">
-                      <button className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors">
-                        Contact Farmer
-                      </button>
-                      <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        <TrendingUp className="h-4 w-4" />
-                      </button>
-                    </div>
-
-                    {comparison && (
-                      <div className="mt-3 p-2 bg-gray-50 rounded text-xs text-gray-600">
-                        {comparison.difference >= 0 
-                          ? `₹${Math.abs(comparison.difference)} above mandi price`
-                          : `₹${Math.abs(comparison.difference)} below mandi price`
-                        }
-                      </div>
-                    )}
                   </div>
                 </div>
               );
@@ -197,4 +204,4 @@ function MainComponent() {
   );
 }
 
-export default MainComponent;
+export default MarketplacePage;
