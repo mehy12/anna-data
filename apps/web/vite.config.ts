@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { reactRouter } from '@react-router/dev/vite';
+// The reactRouter import has been removed
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -52,7 +52,7 @@ export default defineConfig({
     consoleToParent(),
     loadFontsFromTailwindSource(),
     addRenderIds(),
-    reactRouter(), // ✅ keep client router
+    // The reactRouter() plugin has been removed
     tsconfigPaths(),
     aliases(),
     layoutWrapperPlugin(),
@@ -70,7 +70,7 @@ export default defineConfig({
   },
   clearScreen: false,
   build: {
-    outDir: 'dist',   // ✅ for Vercel
+    outDir: 'dist',
     target: 'esnext',
     rollupOptions: {
       input: './index.html',
