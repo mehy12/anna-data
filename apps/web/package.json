@@ -4,6 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "vite build",
+ 		"start": "node __create/index.ts",
 		"dev": "react-router dev",
 		"typecheck": "react-router typegen && tsc --noEmit"
 	},
